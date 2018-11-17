@@ -34,10 +34,21 @@ public class Exercise9Test extends ClassicOnlineStore {
          * Implement a {@link Collector} which can create a String with comma separated names shown in the assertion.
          * The collector will be used by serial stream.
          */
-        Supplier<Object> supplier = null;
-        BiConsumer<Object, String> accumulator = null;
-        BinaryOperator<Object> combiner = null;
-        Function<Object, String> finisher = null;
+        Supplier<StringBuilder> supplier = StringBuilder::new;
+        BiConsumer<StringBuilder, String> accumulator = (sb, s) -> {
+            if(sb.length() != 0) {
+                sb.append(",");
+            }
+            sb.append(s);
+        };
+
+        BinaryOperator<StringBuilder> combiner = (sb1, sb2) -> {
+            if(sb1.length() != 0) {
+                sb1.append(",");
+            }
+            return sb1.append(",").append(sb2);
+        };
+        Function<StringBuilder, String> finisher = StringBuilder::toString;
 
         Collector<String, ?, String> toCsv =
             new CollectorImpl<>(supplier, accumulator, combiner, finisher, Collections.emptySet());
@@ -86,6 +97,9 @@ public class Exercise9Test extends ClassicOnlineStore {
          * "1-3" will be "111"
          * "7,1-3,5" will be "1110101"
          */
+
+        Supplier<List<Integer>> supplier = () -> new ArrayList<>
+
         Collector<String, ?, String> toBitString = null;
 
         String bitString = Arrays.stream(bitList.split(",")).collect(toBitString);
